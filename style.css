@@ -1,0 +1,74 @@
+* {
+    margin: 0;
+    padding: 0;
+    justify-items: center;
+    align-items: center;
+}
+
+h1 {
+    font-size: 4rem;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 1fr 5fr 1fr;
+    grid-area: "header" "gamearea" "controls"
+}
+
+#header {
+    grid-template-areas: "header";
+
+}
+
+#gamearea {
+    width: 600px;
+    height: 600px;
+    grid-template-areas: "gamearea";
+    box-sizing: border-box;
+}
+
+#controls {
+    grid-template-areas: "controls";
+    margin-top: 11px;
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+#gridcontainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#square {
+    width: 200px;
+    height: 200px;
+    border: black solid 1px;
+    box-sizing: border-box;
+}
+
+button {
+    border: solid black 1px;
+    height: 25px;
+    width: 104px;
+}
+
+input {
+    height: 30px;
+    width: 100px;
+}
+
+#announcement {
+    margin-top: 10px;
+    font-size: 1.5rem;
+}
+
+
+
+
+
+
+
+

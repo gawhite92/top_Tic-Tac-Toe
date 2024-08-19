@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Tic-Tac-Toe</title>
+</head>
+
+<body>
+
+    <div id="header">
+        <h1>Tic Tac Toe</h1>
+    </div>
+
+    <div id="gamearea">
+        <div id="gridcontainer">
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+            <div id="square"></div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div id="playerinputcontainer">
+            <input type=text id="player1input" placeholder="Player 1 name"></input>
+            <input type=text id="player2input" placeholder="Player 2 name"></input>
+        </div>
+        <div id="buttoncontainer">
+            <button id="gamestart-btn" onclick="alert('Game start!')">Start</button>
+            <button id="gamerestart-btn" onclick="alert('Game restart!')">Restart</button>
+        </div>
+        <div id="announcement">You lose!</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
