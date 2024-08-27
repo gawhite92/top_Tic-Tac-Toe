@@ -26,7 +26,7 @@ function GameBoard() {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function GameController(
-    playerOneName = 'Player 1', // Game to be initialised with the customised player names entered via input forms. These are the default names.
+    playerOneName = 'Player 1', // Game should be initialised with customised player names entered via input forms. Onclick = GameController(name1, name2). Otherwise, these are the default names.
     playerTwoName = 'Player 2'
 ) {
     const players = [
@@ -53,7 +53,7 @@ function GameController(
     const getActivePlayer = () => activePlayer;
 
     const incrementScore = () => {
-        winningPlayer().score++;
+        winningPlayer.score++;
         return winningPlayer.score;
     }
 
@@ -70,42 +70,41 @@ function GameController(
             [6, 4, 2]
         ];
 
-        ///////////////
-        for (let i = 0; i < 5; i++) { //TESTING ONLY TO GIVE REAL NUMBERS
-            playTurn()
-        }
-        ///////////////
-
         console.log(printBoardValuesString());
 
-        for (i = 0; i < winningCombinations.length; i++) { //Loops to check all 8 combinations
+        for (let i = 0; i < winningCombinations.length; i++) { //Loops through all winning combinations (8 of)
             let trioValue = '';
 
-            for (j = 0; j < winningCombinations[i].length; j++) { //Loops for each digit in the triplet grouping
-                trioValue += printBoardValuesString()[winningCombinations[i][j]]; //Assigns each digit to a variable
+            for (let j = 0; j < winningCombinations[i].length; j++) { //Loops for each digit per combination (3 of)
+                trioValue += printBoardValuesString()[winningCombinations[i][j]]; //Checks current game board locations against possible win combinations. Assigns each gameboard combination to a string.
             }
-            console.log(trioValue);
-            if (trioValue == 111) {
+            
+            //console.log(trioValue); //Logs the current string FOR TESTING
+            
+            if (trioValue == 111) { //Checks each individual string (8 of) against the board wins by player1/2. Assigns winning player and increments their score.
+                gameEndStatus = true;
                 console.log(`${playerOneName} wins!`);
                 winningPlayer = players[0];
                 incrementScore();
             } else if (trioValue == 222) {
+                gameEndStatus = true;
                 console.log(`${playerTwoName} wins!`);
                 winningPlayer = players[1];
                 incrementScore();
-            }
+            } 
         }
 
-        if (printBoardValuesString().includes('0')) {
+
+        // If both above checks against individual strings comes back negative, this checks to see if the board still has available space.
+        if (gameEndStatus == false && printBoardValuesString().includes('0')) {
             console.log('No wins, game continues!');
-        } else {
+        } else if (printBoardValuesString().includes('0') == false) {
             console.log("It's a draw!");
-            //newRound();
+            newRound();
         }
     }
 
-    const winningPlayer = () => activePlayer;
-
+    let winningPlayer = ''
 
     const getScores = () => {
         console.log(`${playerOneName}'s score: ${players[0].score}`);
@@ -125,7 +124,26 @@ function GameController(
         return boardValues;
     }
 
-    const newRound = () => board.resetBoard();
+    const newRound = () => {
+        gameEndStatus = false;
+        getScores();
+        console.log('New round!')
+        board.resetBoard();
+        switchActivePlayer();
+        console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
+    }
+
+    const newGame = () => {
+        console.log('The game has been restarted.')
+        board.resetBoard();
+        resetScores();
+        console.log('Scores have been reset.')
+        getScores();
+        switchActivePlayer();
+        console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
+    }
+
+    let gameEndStatus = false;
 
     const playTurn = (cell) => {
         const randomNumberGenerator = () => Math.floor(Math.random() * 9); //TESTING RANDOM NUMBER GENERATOR
@@ -134,17 +152,17 @@ function GameController(
         if (board.getBoard()[randomNumber] != 0) {
             console.log(`Chosen number = ${randomNumber}. Existing cell value = ${board.getBoard()[randomNumber]}. This does not = 0.`)
             console.log('ERROR - This cell is already taken! Choose another.');
-            printBoardValuesString();
             return
         }
         board.setCell(randomNumber, activePlayer.token);
         console.log(`CONTROLLER - ${activePlayer.name} chose cell ${randomNumber}!`);
-        printBoardValuesString();
-        switchActivePlayer();
-        console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
+        checkForWin();
+        if (gameEndStatus == true){
+            newRound();
+        }
     };
 
-    return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin };
+    return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame };
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -157,11 +175,8 @@ const game = GameController();
 //TESTING
 
 const TESTING = () => {
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 20; i++) {
         console.log(`*****Turn ${i + 1}*****`);
         game.playTurn();
-        game.incrementScore();
-        game.getScores();
-        //game.checkForWin();
     }
 }
