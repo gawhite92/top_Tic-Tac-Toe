@@ -16,17 +16,15 @@ function GameBoard() {
         board[cell] = [value];
     };
 
-    const getCell = (cell) => board[cell];
-
     const getBoard = () => board;
 
-    return { resetBoard, setCell, getCell, getBoard };
+    return { resetBoard, setCell, getBoard };
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function GameController(
-    playerOneName = 'Player 1', // Game should be initialised with customised player names entered via input forms. Onclick = GameController(name1, name2). Otherwise, these are the default names.
+    playerOneName = 'Player 1', // Game should be initialised with customised player names entered via input forms. Something like; Onclick = GameController(name1, name2). Otherwise, these are the default names.
     playerTwoName = 'Player 2'
 ) {
     const players = [
@@ -109,6 +107,11 @@ function GameController(
     const getScores = () => {
         console.log(`${playerOneName}'s score: ${players[0].score}`);
         console.log(`${playerTwoName}'s score: ${players[1].score}`);
+        return [players[0].score, players[1].score]
+    }
+
+    const getPlayerNames = () => {
+        return [players[0].name, players[1].name]
     }
 
     const resetScores = () => { // Reset points completely on 'Restart' button.
@@ -162,7 +165,10 @@ function GameController(
         }
     };
 
-    return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame };
+    return { getActivePlayer, playTurn, newGame, getScores, getPlayerNames };
+
+    //TESTING
+    // return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame };
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
