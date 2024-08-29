@@ -132,7 +132,6 @@ function GameController(
         getScores();
         console.log('New round!')
         board.resetBoard();
-        switchActivePlayer();
         console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
     }
 
@@ -149,17 +148,15 @@ function GameController(
     let gameEndStatus = false;
 
     const playTurn = (cell) => {
-        const randomNumberGenerator = () => Math.floor(Math.random() * 9); //TESTING RANDOM NUMBER GENERATOR
-        let randomNumber = randomNumberGenerator(); //REMEMBER TO CHANGE ALL BELOW RANDOM NUMBER BACK TO CELL ONCE WORKING
-
-        if (board.getBoard()[randomNumber] != 0) {
-            console.log(`Chosen number = ${randomNumber}. Existing cell value = ${board.getBoard()[randomNumber]}. This does not = 0.`)
+        if (board.getBoard()[cell] != 0) {
+            console.log(`Chosen number = ${cell}. Existing cell value = ${board.getBoard()[cell]}. This does not = 0.`)
             console.log('ERROR - This cell is already taken! Choose another.');
             return
         }
-        board.setCell(randomNumber, activePlayer.token);
-        console.log(`CONTROLLER - ${activePlayer.name} chose cell ${randomNumber}!`);
+        board.setCell(cell, activePlayer.token);
+        console.log(`CONTROLLER - ${activePlayer.name} chose cell ${cell}!`);
         checkForWin();
+        switchActivePlayer();
         if (gameEndStatus == true){
             newRound();
         }
@@ -168,21 +165,10 @@ function GameController(
     return { getActivePlayer, playTurn, newGame, getScores, getPlayerNames };
 
     //TESTING
-    // return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame };
+    //  return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame, getPlayerNames };
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GLOBAL
 
 const game = GameController();
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//TESTING
-
-const TESTING = () => {
-    for (let i = 0; i < 20; i++) {
-        console.log(`*****Turn ${i + 1}*****`);
-        game.playTurn();
-    }
-}
