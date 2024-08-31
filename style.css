@@ -2,7 +2,6 @@
     margin: 0;
     padding: 0;
     justify-items: center;
-    align-items: center;
     font-family: system-ui, sans-serif;
     font-weight: normal;
 }
@@ -13,38 +12,53 @@ h1 {
 
 body {
     display: grid;
-    grid-template-rows: 1fr 5fr 1fr;
-    grid-area: "header" "gamearea" "controls"
+    grid-template-rows: 0.7fr 4fr 1fr;
+    grid-template-areas: 'header'
+                         'gamearea'
+                         'footer';
 }
 
 #header {
-    grid-template-areas: "header";
-
+    grid-area: header;
 }
 
 #gamearea {
     width: 600px;
-    height: 600px;
-    grid-template-areas: "gamearea";
+    grid-area: gamearea;
     box-sizing: border-box;
+    align-self: flex-start;
+}
+
+#footer {
+    margin-top: 30px;
+    grid-area: footer;
+    display: flex;
+    justify-content:space-between;
+    width: 450px;
 }
 
 #controls {
-    grid-template-areas: "controls";
-    margin-top: 11px;
-    justify-content: center;
-    align-content: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    width: 300px;
+}
+
+#playerinputcontainer,
+#buttoncontainer {
+    display:flex;
     gap: 7px;
 }
 
 #gridcontainer {
     display: flex;
     flex-wrap: wrap;
+    width: 600px;
+    height: 600px;
 }
 
-#square {
+.cell {
     width: 200px;
     height: 200px;
     border: black solid 1px;
@@ -58,25 +72,41 @@ button {
     border: solid black 1px;
     height: 25px;
     width: 104px;
+    font-weight: bold;
 }
 
 input {
-    height: 30px;
+    height: 25px;
     width: 100px;
+    margin-top: 10px;
 }
 
 #announcement {
     margin-top: 10px;
-    font-size: 1.5rem;
-}
-
-#footer {
-    display: flex;
-    justify-content:space-between;
-    width: 450px;
+    font-size: 1.2rem;
+    text-wrap: nowrap;
 }
 
 .score {
     font-size: 5rem;
     font-family: "Orbitron", sans-serif;
+    align-self: flex-start;
+    position: relative;
+    bottom: 14px;
+    width: 80px;
+    text-align: center;
 }
+
+
+.blink {
+    animation: blinkIt 1s infinite;
+  }
+  
+  @keyframes blinkIt {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }

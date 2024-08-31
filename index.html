@@ -21,15 +21,15 @@
 
     <div id="gamearea">
         <div id="gridcontainer">
-            <div id="square">X</div>
-            <div id="square">O</div>
-            <div id="square">X</div>
-            <div id="square">O</div>
-            <div id="square">X</div>
-            <div id="square">O</div>
-            <div id="square">X</div>
-            <div id="square">O</div>
-            <div id="square">X</div>
+            <div id="cell0" class="cell"></div>
+            <div id="cell1" class="cell"></div>
+            <div id="cell2" class="cell"></div>
+            <div id="cell3" class="cell"></div>
+            <div id="cell4" class="cell"></div>
+            <div id="cell5" class="cell"></div>
+            <div id="cell6" class="cell"></div>
+            <div id="cell7" class="cell"></div>
+            <div id="cell8" class="cell"></div>
         </div>
     </div>
 
@@ -37,14 +37,16 @@
         <div id="scoreplayer1" class="score">0</div>
         <div id="controls">
             <div id="playerinputcontainer">
-                <input type=text id="player1input" placeholder="Player 1 name"></input>
-                <input type=text id="player2input" placeholder="Player 2 name"></input>
+                <form id="playerNamesForm">	
+                <input type=text id="player1input" placeholder="Player 1 name" ></input>
+                <input type=text id="player2input" placeholder="Player 2 name" ></input>
+                </form>
             </div>
             <div id="buttoncontainer">
-                <button id="gamestart-btn" onclick="alert('Game start!')">Start</button>
-                <button id="gamerestart-btn" onclick="alert('Game restart!')">Restart</button>
+                <button id="gamestart-btn">Start</button>
+                <button id="gamerestart-btn">Restart</button>
             </div>
-            <div id="announcement">You lose!</div>
+            <div id="announcement">Enter your names and press start!</div>
         </div>
         <div id="scoreplayer2" class="score">0</div>
     </div>

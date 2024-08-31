@@ -18,7 +18,11 @@ function GameBoard() {
 
     const getBoard = () => board;
 
-    return { resetBoard, setCell, getBoard };
+    return {
+        resetBoard,
+        setCell,
+        getBoard
+    };
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,11 +44,11 @@ function GameController(
         }
     ]
 
-    const board = GameBoard(); // Initialises the gameboard. Allows this factory to access the returned 'board' objects.
+    const board = GameBoard(); // Initialises the gameboard. Allows this to access the returned 'board' objects.
 
     let activePlayer = players[0];
 
-    console.log('GameController Initialised. Players set, activeplayer set, board initialised.')
+    console.log('GameController / GameBoard initialised.')
 
     const switchActivePlayer = () => activePlayer = activePlayer === players[0] ? players[1] : players[0];
 
@@ -76,9 +80,8 @@ function GameController(
             for (let j = 0; j < winningCombinations[i].length; j++) { //Loops for each digit per combination (3 of)
                 trioValue += printBoardValuesString()[winningCombinations[i][j]]; //Checks current game board locations against possible win combinations. Assigns each gameboard combination to a string.
             }
-            
-            //console.log(trioValue); //Logs the current string FOR TESTING
-            
+
+
             if (trioValue == 111) { //Checks each individual string (8 of) against the board wins by player1/2. Assigns winning player and increments their score.
                 gameEndStatus = true;
                 console.log(`${playerOneName} wins!`);
@@ -89,13 +92,13 @@ function GameController(
                 console.log(`${playerTwoName} wins!`);
                 winningPlayer = players[1];
                 incrementScore();
-            } 
+            }
         }
 
 
         // If both above checks against individual strings comes back negative, this checks to see if the board still has available space.
         if (gameEndStatus == false && printBoardValuesString().includes('0')) {
-            console.log('No wins, game continues!');
+
         } else if (printBoardValuesString().includes('0') == false) {
             console.log("It's a draw!");
             newRound();
@@ -104,9 +107,9 @@ function GameController(
 
     let winningPlayer = ''
 
+    const getWinningPlayer = () => winningPlayer;
+
     const getScores = () => {
-        console.log(`${playerOneName}'s score: ${players[0].score}`);
-        console.log(`${playerTwoName}'s score: ${players[1].score}`);
         return [players[0].score, players[1].score]
     }
 
@@ -114,7 +117,7 @@ function GameController(
         return [players[0].name, players[1].name]
     }
 
-    const resetScores = () => { // Reset points completely on 'Restart' button.
+    const resetScores = () => { //
         players[0].score = 0;
         players[1].score = 0;
     }
@@ -132,7 +135,7 @@ function GameController(
         getScores();
         console.log('New round!')
         board.resetBoard();
-        console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
+        console.log(`It is now ${activePlayer.name}'s turn!`);
     }
 
     const newGame = () => {
@@ -142,7 +145,7 @@ function GameController(
         console.log('Scores have been reset.')
         getScores();
         switchActivePlayer();
-        console.log(`CONTROLLER - It is now ${activePlayer.name}'s turn!`);
+        console.log(`It is now ${activePlayer.name}'s turn!`);
     }
 
     let gameEndStatus = false;
@@ -154,21 +157,118 @@ function GameController(
             return
         }
         board.setCell(cell, activePlayer.token);
-        console.log(`CONTROLLER - ${activePlayer.name} chose cell ${cell}!`);
+        console.log(`${activePlayer.name} chose cell ${Number(cell)+1}!`);
         checkForWin();
         switchActivePlayer();
-        if (gameEndStatus == true){
+        if (gameEndStatus == true) {
             newRound();
         }
     };
 
-    return { getActivePlayer, playTurn, newGame, getScores, getPlayerNames };
+    const getGameEndStatus = () => gameEndStatus;
 
-    //TESTING
-    //  return { getActivePlayer, switchActivePlayer, newRound, printBoardValuesString, incrementScore, getScores, resetScores, playTurn, checkForWin, gameEndStatus, newGame, getPlayerNames };
+    return {
+        getActivePlayer,
+        playTurn,
+        newGame,
+        getScores,
+        getPlayerNames,
+        printBoardValuesString,
+        getGameEndStatus,
+        getWinningPlayer
+    };
+
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//GLOBAL
+(function ScreenController() {
+    console.log('Screen controller initialised.')
 
-const game = GameController();
+    let game = ''
+
+    const
+        player1Input = document.getElementById('player1input'),
+        player2Input = document.getElementById('player2input'),
+        resetButton = document.getElementById("gamerestart-btn"),
+        startButton = document.getElementById("gamestart-btn"),
+        announcement = document.getElementById("announcement"),
+        scorePlayer1 = document.getElementById("scoreplayer1"),
+        scorePlayer2 = document.getElementById("scoreplayer2"),
+        cells = document.querySelectorAll(".cell");
+
+    startButton.addEventListener("click", () => {
+        player1Input.value == '' ? player1Name = undefined : player1Name = player1Input.value;
+        player2Input.value == '' ? player2Name = undefined : player2Name = player2Input.value;
+   
+        game = GameController(player1Name, player2Name)
+
+        announcement.textContent = `It is ${game.getActivePlayer().name}'s turn!`;
+    });
+
+    resetButton.addEventListener("click", () => {
+        announcement.textContent = `Resetting game...`;
+
+        setTimeout(function () {
+            game.newGame();
+            updateScreen();
+            announcement.textContent = `It is ${game.getActivePlayer().name}'s turn!`;
+        }, 1000);
+
+    });
+
+    cells.forEach((cell) => {
+        cell.addEventListener("click", () => {
+            if (cell.textContent != '') {
+                announcement.textContent = `ERROR. Choose another cell!`;
+                return
+            }
+
+            //Doesn't allow gameplay until user names are entered. Flashes prompt.
+            if (game == '') {
+                blinkElement(announcement, 200, 1500)
+                return
+            }
+
+            game.playTurn((cell.id).slice(4));
+            updateScreen();
+        });
+    });
+
+    const updateScreen = () => {
+        cells.forEach((cell) => {
+            cell.textContent = game.printBoardValuesString()[(cell.id).slice(4)];
+            if (cell.textContent == 1) {
+                cell.textContent = 'X'
+            } else if (cell.textContent == 2) {
+                cell.textContent = 'O';
+            } else {
+                cell.textContent = '';
+            }
+        });
+        scorePlayer1.textContent = game.getScores()[0];
+        scorePlayer2.textContent = game.getScores()[1];
+
+        console.log(`${game.getActivePlayer().name}'s turn!`)
+
+        announcement.textContent = `It is ${game.getActivePlayer().name}'s turn!`
+        
+        if (game.getGameEndStatus() == true) {
+            console.log('Round has ended');
+            announcement.textContent = `${game.getWinningPlayer().name}`;
+
+            setTimeout(function () {
+                announcement.textContent = `It is ${game.getActivePlayer().name}'s turn!`;
+            }, 2000);
+        }
+    };
+
+    function blinkElement(elm, interval, duration) {
+
+        elm.style.visibility = (elm.style.visibility === "hidden" ? "visible" : "hidden");
+
+        if (duration > 0) {
+            setTimeout(blinkElement, interval, elm, interval, duration - interval);
+        } else {
+            elm.style.visibility = "visible";
+        }
+    }
+})();
